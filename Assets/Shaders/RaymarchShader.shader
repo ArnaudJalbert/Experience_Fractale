@@ -1,4 +1,6 @@
-Shader "Hidden/RaymarchShader"
+// changed from "Hidden" to "PeerPlay"
+// not sure if this is ok
+Shader "PeerPlay/RaymarchShader"
 {
     Properties
     {
@@ -15,8 +17,23 @@ Shader "Hidden/RaymarchShader"
             #pragma vertex vert
             #pragma fragment frag
 
+            // adding a target
+            #pragma target 3.0
+
             #include "UnityCG.cginc"
 
+            #define MAX_RAYMARCH_ITERATIONS 64
+            #define DISTANCE_EPSILON 0.01f
+            
+
+            // parameters
+            sampler2D _MainTex;
+            // maximum distance the ray is allowed to travel
+            uniform float _MaxDistance;
+            
+            // frustum -> 4 directions that maps to the 4 corners of the screen
+            uniform float4x4 _CamFrustum, _CamToWorld;
+            
             struct appdata
             {
                 float4 vertex : POSITION;
@@ -27,24 +44,90 @@ Shader "Hidden/RaymarchShader"
             {
                 float2 uv : TEXCOORD0;
                 float4 vertex : SV_POSITION;
+
+                // ray direction
+                float3 ray : TEXCOORD1;
             };
 
             v2f vert (appdata v)
             {
                 v2f o;
+
+                half index = v.vertex.z;
+                v.vertex.z = 0;
+                
                 o.vertex = UnityObjectToClipPos(v.vertex);
                 o.uv = v.uv;
+
+                o.ray = _CamFrustum[(int)index].xyz;
+
+                o.ray /= abs(o.ray.z);
+
+                o.ray = mul(_CamToWorld, o.ray);
+                
                 return o;
             }
 
-            sampler2D _MainTex;
+            float sdSphere(float3 p, float r)
+            {
+                return length(p) - r;
+            }
+            
+            float distanceField(float3 p)
+            {
+                float Sphere1 = sdSphere(p - float3(0,0,0), 2.0);
+
+                // TODO implement the other object in the scene
+                // float dist = min(Sphere1);
+
+                return Sphere1;
+            }
+
+            fixed4 raymarching(float3 ro, float3 rd)
+            {
+                fixed4 result = fixed4(1,1,1,1);
+
+                float dT = 0.0f; // distance traveled by ray
+
+                for (int i = 0; i < MAX_RAYMARCH_ITERATIONS ; i++)
+                {
+                    if(dT > _MaxDistance)
+                    {
+                        // nothing is hit so we can draw the environment here
+                        result = fixed4(rd, 1);
+                        break;
+                    }
+                
+
+                    // get the current position of the ray 
+                    float3 p = ro + rd * dT;
+
+                    // check the closest distance to an object
+                    float d = distanceField(p);
+
+                    // we check if there is a hit
+                    if (d < DISTANCE_EPSILON)
+                    {
+                        result = fixed4(1,1,1,1);
+                        break;
+                    }
+
+                    // adding the closest distance to the dT variable
+                    dT += d;    
+                }
+                
+                return result;
+                
+            }
 
             fixed4 frag (v2f i) : SV_Target
             {
-                fixed4 col = tex2D(_MainTex, i.uv);
-                // just invert the colors
-                col.rgb = 1 - col.rgb;
-                return col;
+                float3 rd = normalize(i.ray.xyz);
+                float3 ro = _WorldSpaceCameraPos;
+
+                fixed4 result = raymarching(ro, rd);
+
+                return result;
             }
             ENDCG
         }
