@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Experimental.GlobalIllumination;
 
 [RequireComponent(typeof(Camera))]
 [ExecuteInEditMode]
@@ -49,6 +50,10 @@ public class RaymarchCamera : MonoBehaviour
         }
     }
     //------------------
+    
+    //------------------
+    public Transform directionalLight;
+    //------------------
 
     private void OnRenderImage(RenderTexture src, RenderTexture dest)
     {
@@ -59,6 +64,7 @@ public class RaymarchCamera : MonoBehaviour
             return;
         }
         
+        RaymarchMaterial.SetVector("_LightDirection", directionalLight ? directionalLight.forward : Vector3.down);
         RaymarchMaterial.SetMatrix("_CamFrustum", CamFrustum(Cam));
         RaymarchMaterial.SetMatrix("_CamToWorld", Cam.cameraToWorldMatrix);
         RaymarchMaterial.SetFloat("_MaxDistance", maxDistance);
