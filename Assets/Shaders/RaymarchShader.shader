@@ -22,7 +22,7 @@ Shader "PeerPlay/RaymarchShader"
 
             #include "UnityCG.cginc"
 
-            #define MAX_RAYMARCH_ITERATIONS 256*2
+            #define MAX_RAYMARCH_ITERATIONS 256
             #define DISTANCE_EPSILON 0.001f
             #define OFFSET (float2(0.001,0))
             
