@@ -1,12 +1,13 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 
 [RequireComponent(typeof(Camera))]
 [ExecuteInEditMode]
 
-public class RaymarchCamera : MonoBehaviour
+public class RaymarchCamera : SceneViewFilter
 {
     
     // Unity Parameters ------------------
@@ -66,6 +67,8 @@ public class RaymarchCamera : MonoBehaviour
 
         // setting the texture 
         RenderTexture.active = dest;
+        // setting _MainTex
+        RaymarchMaterial.SetTexture("_MainTex", src);
         // pushing the defined matrix 
         GL.PushMatrix();
         // setting up an orthographic projection 

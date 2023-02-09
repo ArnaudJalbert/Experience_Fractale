@@ -96,7 +96,7 @@ Shader "PeerPlay/RaymarchShader"
                     if(dT > _MaxDistance)
                     {
                         // nothing is hit so we can draw the environment here
-                        result = fixed4(rd, 1);
+                        result = fixed4(rd, 0);
                         break;
                     }
                 
@@ -124,12 +124,15 @@ Shader "PeerPlay/RaymarchShader"
 
             fixed4 frag (v2f i) : SV_Target
             {
+                fixed3 col = tex2D(_MainTex, i.uv);
                 float3 rd = normalize(i.ray.xyz);
                 float3 ro = _WorldSpaceCameraPos;
 
                 fixed4 result = raymarching(ro, rd);
 
-                return result;
+                float3 color = col *(1.0-result.w) + result.xyz * result.w;
+                
+                return fixed4(color, 1.0);
             }
             ENDCG
         }
