@@ -13,6 +13,8 @@ public class RaymarchCamera : MonoBehaviour
     [SerializeField] private Shader shader;
 
     [SerializeField] private float maxDistance;
+
+    [SerializeField] private Vector4 testSphere;
     //-----------------------------------
     
     // Material ------------
@@ -60,6 +62,7 @@ public class RaymarchCamera : MonoBehaviour
         RaymarchMaterial.SetMatrix("_CamFrustum", CamFrustum(Cam));
         RaymarchMaterial.SetMatrix("_CamToWorld", Cam.cameraToWorldMatrix);
         RaymarchMaterial.SetFloat("_MaxDistance", maxDistance);
+        RaymarchMaterial.SetVector("_TestSphere", testSphere);
 
         // setting the texture 
         RenderTexture.active = dest;

@@ -30,6 +30,8 @@ Shader "PeerPlay/RaymarchShader"
             sampler2D _MainTex;
             // maximum distance the ray is allowed to travel
             uniform float _MaxDistance;
+            // sphere for testing
+            uniform float4 _TestSphere;
             
             // frustum -> 4 directions that maps to the 4 corners of the screen
             uniform float4x4 _CamFrustum, _CamToWorld;
@@ -75,7 +77,7 @@ Shader "PeerPlay/RaymarchShader"
             
             float distanceField(float3 p)
             {
-                float Sphere1 = sdSphere(p - float3(0,0,0), 2.0);
+                float Sphere1 = sdSphere(p - _TestSphere.xyz, _TestSphere.w);
 
                 // TODO implement the other object in the scene
                 // float dist = min(Sphere1);
