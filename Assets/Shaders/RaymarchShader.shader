@@ -23,12 +23,14 @@ Shader "PeerPlay/RaymarchShader"
             #include "UnityCG.cginc"
 
             #define MAX_RAYMARCH_ITERATIONS 256
-            #define DISTANCE_EPSILON 0.001f
+            #define DISTANCE_EPSILON 0.01f
             #define OFFSET (float2(0.001,0))
             
 
             // parameters
             sampler2D _MainTex;
+            // check if there are meshes in scene
+            uniform sampler2D _CameraDepthTexture;
             // maximum distance the ray is allowed to travel
             uniform float _MaxDistance;
             // sphere for testing
@@ -99,18 +101,18 @@ Shader "PeerPlay/RaymarchShader"
                 return normalize(n);
             }
             
-            fixed4 raymarching(float3 ro, float3 rd)
+            fixed4 raymarching(float3 ro, float3 rd, float depth)
             {
-                fixed4 result = fixed4(0.5,0.5,0.5,1);
+                fixed4 result = fixed4(rd,0);
 
                 float dT = 0.0f; // distance traveled by ray
 
                 for (int i = 0; i < MAX_RAYMARCH_ITERATIONS ; i++)
                 {
-                    if(dT > _MaxDistance)
+                    if(dT > _MaxDistance || dT >= depth)
                     {
                         // nothing is hit so we can draw the environment here
-                        result = fixed4(rd, 1);
+                        result = fixed4(rd, 0);
                         break;
                     }
 
@@ -128,7 +130,7 @@ Shader "PeerPlay/RaymarchShader"
                         
                         float light = dot(-_LightDirection, n);
                         
-                        result = fixed4(1,1,1,1) * light;
+                        result = fixed4(fixed3(1,1,1) * light, 1);
                         break;
                     }
 
@@ -142,12 +144,26 @@ Shader "PeerPlay/RaymarchShader"
 
             fixed4 frag (v2f i) : SV_Target
             {
+                // to check the meshes in scene
+                float depth = LinearEyeDepth(tex2D(_CameraDepthTexture, i.uv).r);
+                depth *= length(i.ray);
+                
+                // color of the viewer
+                float3 col = tex2D(_MainTex, i.uv);
+
+                // ray info
                 float3 rd = normalize(i.ray.xyz);
                 float3 ro = _WorldSpaceCameraPos;
 
-                fixed4 result = raymarching(ro, rd);
+                // computing the ray
+                fixed4 result = raymarching(ro, rd, depth);
 
-                return result;
+                // check if we use the ray color or the scene color
+                                 // scene view           // hit value
+                float3 hitCheck = (col * (1.0-result.w)) + (result.xyz * result.w);
+
+                // return the result
+                return fixed4(hitCheck, 1.0);
             }
             ENDCG
         }
