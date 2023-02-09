@@ -22,8 +22,9 @@ Shader "PeerPlay/RaymarchShader"
 
             #include "UnityCG.cginc"
 
-            #define MAX_RAYMARCH_ITERATIONS 64
-            #define DISTANCE_EPSILON 0.01f
+            #define MAX_RAYMARCH_ITERATIONS 256
+            #define DISTANCE_EPSILON 0.001f
+            #define OFFSET (float2(0.001,0))
             
 
             // parameters
@@ -32,6 +33,8 @@ Shader "PeerPlay/RaymarchShader"
             uniform float _MaxDistance;
             // sphere for testing
             uniform float4 _TestSphere;
+            // direction of the light
+            uniform float3 _LightDirection;
             
             // frustum -> 4 directions that maps to the 4 corners of the screen
             uniform float4x4 _CamFrustum, _CamToWorld;
@@ -85,9 +88,20 @@ Shader "PeerPlay/RaymarchShader"
                 return Sphere1;
             }
 
+            float3 getNormal(float3 p)
+            {
+                float3 n = float3(
+                    distanceField(p+OFFSET.xyy) - distanceField(p-OFFSET.xyy),
+                    distanceField(p+OFFSET.yxy) - distanceField(p-OFFSET.yxy),
+                    distanceField(p+OFFSET.yyx) - distanceField(p-OFFSET.yyx)
+                    );
+
+                return normalize(n);
+            }
+            
             fixed4 raymarching(float3 ro, float3 rd)
             {
-                fixed4 result = fixed4(1,1,1,1);
+                fixed4 result = fixed4(0.5,0.5,0.5,1);
 
                 float dT = 0.0f; // distance traveled by ray
 
@@ -99,7 +113,6 @@ Shader "PeerPlay/RaymarchShader"
                         result = fixed4(rd, 1);
                         break;
                     }
-                
 
                     // get the current position of the ray 
                     float3 p = ro + rd * dT;
@@ -110,7 +123,12 @@ Shader "PeerPlay/RaymarchShader"
                     // we check if there is a hit
                     if (d < DISTANCE_EPSILON)
                     {
-                        result = fixed4(1,1,1,1);
+                        //
+                        float3 n = getNormal(p);
+                        
+                        float light = dot(-_LightDirection, n);
+                        
+                        result = fixed4(1,1,1,1) * light;
                         break;
                     }
 
