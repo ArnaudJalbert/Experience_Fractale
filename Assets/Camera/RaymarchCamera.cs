@@ -1,13 +1,13 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEditor;
 using UnityEngine;
+using UnityEngine.Experimental.GlobalIllumination;
 
 [RequireComponent(typeof(Camera))]
 [ExecuteInEditMode]
 
-public class RaymarchCamera : SceneViewFilter
+public class RaymarchCamera : MonoBehaviour
 {
     
     // Unity Parameters ------------------
@@ -50,6 +50,10 @@ public class RaymarchCamera : SceneViewFilter
         }
     }
     //------------------
+    
+    //------------------
+    public Transform directionalLight;
+    //------------------
 
     private void OnRenderImage(RenderTexture src, RenderTexture dest)
     {
@@ -60,6 +64,7 @@ public class RaymarchCamera : SceneViewFilter
             return;
         }
         
+        RaymarchMaterial.SetVector("_LightDirection", directionalLight ? directionalLight.forward : Vector3.down);
         RaymarchMaterial.SetMatrix("_CamFrustum", CamFrustum(Cam));
         RaymarchMaterial.SetMatrix("_CamToWorld", Cam.cameraToWorldMatrix);
         RaymarchMaterial.SetFloat("_MaxDistance", maxDistance);
@@ -67,8 +72,6 @@ public class RaymarchCamera : SceneViewFilter
 
         // setting the texture 
         RenderTexture.active = dest;
-        // setting _MainTex
-        RaymarchMaterial.SetTexture("_MainTex", src);
         // pushing the defined matrix 
         GL.PushMatrix();
         // setting up an orthographic projection 
