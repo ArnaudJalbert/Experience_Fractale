@@ -9,18 +9,20 @@ using UnityEngine.Experimental.GlobalIllumination;
 
 public class RaymarchCamera : SceneViewFilter
 {
-    
-    // Unity Parameters ------------------
+    // shader file
+    [Header("Shader File")]
     [SerializeField] private Shader shader;
-
-    [SerializeField] private float maxDistance;
-
-    [SerializeField] private Vector4 testSphere, testBox;
+    
+    // Geometry -------------------------
+    [Header("Geometry")]
+    [SerializeField] private Vector4 testSphere;
+    [SerializeField] private Vector4 testBox;
 
     [SerializeField] private Color mainColor;
     //-----------------------------------
     
     // Material ------------
+    [Header("Material")]
     private Material _raymarchMaterial;
 
     public Material RaymarchMaterial
@@ -39,6 +41,9 @@ public class RaymarchCamera : SceneViewFilter
 
     // Camera ------------
     private Camera _cam;
+    
+    [Header("Camera")]
+    [SerializeField] private float maxDistance;
 
     public Camera Cam
     {
@@ -53,9 +58,18 @@ public class RaymarchCamera : SceneViewFilter
     }
     //------------------
     
-    //------------------
-    public Transform directionalLight;
-    //------------------
+    // Light + Shading ------------------
+    [Header("Shading")]
+    [SerializeField] private Transform directionalLight;
+
+    [SerializeField] private Color lightColor;
+
+    [SerializeField] private float lightIntensity;
+
+    [SerializeField] private Vector2 shadowDistance;
+
+    [SerializeField] private float shadowIntensity;
+    //-------------------------
 
     private void OnRenderImage(RenderTexture src, RenderTexture dest)
     {
@@ -66,13 +80,22 @@ public class RaymarchCamera : SceneViewFilter
             return;
         }
         
-        RaymarchMaterial.SetVector("_LightDirection", directionalLight ? directionalLight.forward : Vector3.down);
-        RaymarchMaterial.SetMatrix("_CamFrustum", CamFrustum(Cam));
-        RaymarchMaterial.SetMatrix("_CamToWorld", Cam.cameraToWorldMatrix);
+        // geometry
+        RaymarchMaterial.SetVector("_MainColor", mainColor);
         RaymarchMaterial.SetFloat("_MaxDistance", maxDistance);
         RaymarchMaterial.SetVector("_TestSphere", testSphere);
         RaymarchMaterial.SetVector("_TestBox", testBox);
-        RaymarchMaterial.SetVector("_MainColor", mainColor);
+        
+       // camera 
+        RaymarchMaterial.SetMatrix("_CamFrustum", CamFrustum(Cam));
+        RaymarchMaterial.SetMatrix("_CamToWorld", Cam.cameraToWorldMatrix);
+        
+        // shading
+        RaymarchMaterial.SetVector("_LightDirection", directionalLight ? directionalLight.forward : Vector3.down);
+        RaymarchMaterial.SetVector("_LightColor", lightColor);
+        RaymarchMaterial.SetFloat("_LightIntensity", lightIntensity);
+        RaymarchMaterial.SetVector("_ShadowDistance", shadowDistance);
+        RaymarchMaterial.SetFloat("_ShadowIntensity;", shadowIntensity);
 
         // setting the texture 
         RenderTexture.active = dest;
