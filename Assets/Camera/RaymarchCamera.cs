@@ -15,7 +15,9 @@ public class RaymarchCamera : SceneViewFilter
 
     [SerializeField] private float maxDistance;
 
-    [SerializeField] private Vector4 testSphere;
+    [SerializeField] private Vector4 testSphere, testBox;
+
+    [SerializeField] private Color mainColor;
     //-----------------------------------
     
     // Material ------------
@@ -69,6 +71,8 @@ public class RaymarchCamera : SceneViewFilter
         RaymarchMaterial.SetMatrix("_CamToWorld", Cam.cameraToWorldMatrix);
         RaymarchMaterial.SetFloat("_MaxDistance", maxDistance);
         RaymarchMaterial.SetVector("_TestSphere", testSphere);
+        RaymarchMaterial.SetVector("_TestBox", testBox);
+        RaymarchMaterial.SetVector("_MainColor", mainColor);
 
         // setting the texture 
         RenderTexture.active = dest;
