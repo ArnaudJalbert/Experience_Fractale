@@ -21,6 +21,7 @@ Shader "PeerPlay/RaymarchShader"
             #pragma target 3.0
 
             #include "UnityCG.cginc"
+            #include "DistanceFunctions.cginc"
 
             #define MAX_RAYMARCH_ITERATIONS 256
             #define DISTANCE_EPSILON 0.01f
@@ -33,13 +34,15 @@ Shader "PeerPlay/RaymarchShader"
             uniform sampler2D _CameraDepthTexture;
             // maximum distance the ray is allowed to travel
             uniform float _MaxDistance;
-            // sphere for testing
+            // shapes for testing
             uniform float4 _TestSphere;
+            uniform float4 _TestBox;
             // direction of the light
             uniform float3 _LightDirection;
-            
             // frustum -> 4 directions that maps to the 4 corners of the screen
             uniform float4x4 _CamFrustum, _CamToWorld;
+            // main color of the shader
+            uniform fixed4 _MainColor;
             
             struct appdata
             {
@@ -74,20 +77,20 @@ Shader "PeerPlay/RaymarchShader"
                 
                 return o;
             }
-
-            float sdSphere(float3 p, float r)
-            {
-                return length(p) - r;
-            }
             
             float distanceField(float3 p)
             {
+                // float modX = pMod1(p.x, 7);
+                // float modY = pMod1(p.y, 7);
+                // float modZ = pMod1(p.z, 7);
+                
                 float Sphere1 = sdSphere(p - _TestSphere.xyz, _TestSphere.w);
 
+                float Box1 = sdBox(p-_TestBox.xyz, _TestBox.w);
                 // TODO implement the other object in the scene
                 // float dist = min(Sphere1);
 
-                return Sphere1;
+                return opS(Sphere1, Box1);
             }
 
             float3 getNormal(float3 p)
@@ -130,7 +133,7 @@ Shader "PeerPlay/RaymarchShader"
                         
                         float light = dot(-_LightDirection, n);
                         
-                        result = fixed4(fixed3(1,1,1) * light, 1);
+                        result = fixed4(_MainColor.xyz * light, 1);
                         break;
                     }
 
