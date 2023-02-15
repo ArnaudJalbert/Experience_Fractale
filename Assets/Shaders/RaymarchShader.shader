@@ -42,6 +42,17 @@ Shader "PeerPlay/RaymarchShader"
             // shapes for testing
             uniform float4 _TestSphere;
             uniform float4 _TestBox;
+
+            // to repeat the shapes
+            uniform float _ModRepeatX;
+            uniform float _ModRepeatY;
+            uniform float _ModRepeatZ;
+
+                        // to repeat the shapes
+            uniform bool _SwitchRepeatX;
+            uniform bool _SwitchRepeatY;
+            uniform bool _SwitchRepeatZ;
+            
             // main color of the shapes
             uniform fixed4 _MainColor;
             
@@ -56,6 +67,8 @@ Shader "PeerPlay/RaymarchShader"
             uniform float2 _ShadowDistance;
             // instensity of shadow
             uniform float _ShadowIntensity;
+            // penumbra coefficient for the shadow
+            uniform float _ShadowPenumbra;
             
             struct appdata
             {
@@ -93,9 +106,19 @@ Shader "PeerPlay/RaymarchShader"
             
             float distanceField(float3 p)
             {
-                // float modX = pMod1(p.x, 7);
-                // float modY = pMod1(p.y, 7);
-                // float modZ = pMod1(p.z, 7);
+                // check if we repeat the shapes
+                if(_SwitchRepeatX)
+                {
+                    float modX = pMod1(p.x, _ModRepeatX);
+                }
+                if(_SwitchRepeatY)
+                {
+                    float modY = pMod1(p.y, _ModRepeatY);
+                }
+                if(_SwitchRepeatZ)
+                {
+                    float modY = pMod1(p.z, _ModRepeatZ);
+                }
 
                 // floor
                 float floor = sdPlane(p, float4(0,1,0,0));
@@ -106,8 +129,10 @@ Shader "PeerPlay/RaymarchShader"
                 // TODO implement the other object in the scene
                 // float dist = min(Sphere1);
 
-                // return opS(Sphere1, Box1);
-                return opU(floor, Sphere1);
+                float sphereBox = opS(Sphere1, Box1);
+
+                // return opU(sphereBox, floor);
+                return sphereBox;
             }
 
             float3 getNormal(float3 p)
@@ -121,31 +146,36 @@ Shader "PeerPlay/RaymarchShader"
                 return normalize(n);
             }
 
-            float hardShadow(float3 ro, float3 rd, float mint, float maxt)
+            float hardShadow(float3 ro, float3 rd, float mint, float maxt, float k)
             {
+                float result = 1.0;
+                
                 for(float t = mint ; t < maxt;)
                 {
                     float h = distanceField(ro+rd*t);
 
-                    if (h < DISTANCE_EPSILON)
+                    if (h < 0.001)
                     {
                         return 0.0;
                     }
+
+                    result = min(result, k*h/t);
+                    
+                    t += h;
                 }
 
-                return 1.0;
+                return result;
             }
             
             float3 shading(float3 p, float3 n)
             {
-                float3 result = (1,1,1);
-
                 // directional light
-                result = ((_LightColor * dot(-_LightDirection, n) * 0.5 + 0.5 ) * _LightIntensity);
+                float result = ((_LightColor * dot(-_LightDirection, n) * 0.5 + 0.5 ) * _LightIntensity);
 
-                float shadow = hardShadow(p, -_LightDirection, _ShadowDistance.x, _ShadowDistance.y) * 0.5 + 0.5;
-
+                float shadow = hardShadow(p, -_LightDirection, _ShadowDistance.x, _ShadowDistance.y, _ShadowPenumbra) * 0.5 + 0.5;
+                
                 shadow = max(0.0, pow(shadow, _ShadowIntensity));
+                
                 result *= shadow;
                 
                 return result;
@@ -180,8 +210,6 @@ Shader "PeerPlay/RaymarchShader"
 
                         // shading
                         float3 s = shading(p, n);
-                        
-                        float light = dot(-_LightDirection, n);
                         
                         result = fixed4(_MainColor.xyz * s, 1);
                         break;
