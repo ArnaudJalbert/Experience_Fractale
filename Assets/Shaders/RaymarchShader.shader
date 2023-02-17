@@ -132,7 +132,7 @@ Shader "PeerPlay/RaymarchShader"
                 float sphereBox = opS(Sphere1, Box1);
 
                 // return opU(sphereBox, floor);
-                return sphereBox;
+                return opU(sphereBox, floor);
             }
 
             float3 getNormal(float3 p)

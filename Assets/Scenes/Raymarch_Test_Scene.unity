@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.17813534, g: 0.21682419, b: 0.26938438, a: 1}
+  m_IndirectSpecularColor: {r: 0.1838174, g: 0.22847751, b: 0.30031994, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -222,8 +222,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   shader: {fileID: 4800000, guid: f4c8fdca34aef454281dbc83e7836ba6, type: 3}
   test: 
-  testSphere: {x: 0.31, y: 0, z: 0, w: 3.67}
-  testBox: {x: 0, y: 0, z: 0, w: 3.4}
+  testSphere: {x: 0.07, y: 4.7, z: 0, w: 3.67}
+  testBox: {x: 0, y: 4.61, z: 0, w: 3.4}
   modRepeatX: 6.31
   modRepeatY: 8
   modRepeatZ: 8.9
@@ -233,11 +233,11 @@ MonoBehaviour:
   mainColor: {r: 0.18534178, g: 0.46226418, b: 0.22959465, a: 0}
   maxDistance: 100000
   directionalLight: {fileID: 1709922401}
-  lightColor: {r: 1, g: 1, b: 1, a: 0}
+  lightColor: {r: 1, g: 0.8259994, b: 0, a: 0}
   lightIntensity: 1
-  shadowDistance: {x: 3.38, y: 4.59}
-  shadowIntensity: 0
-  shadowPenumbra: 0
+  shadowDistance: {x: 0.1, y: 13.3}
+  shadowIntensity: 1
+  shadowPenumbra: 52.07
 --- !u!1 &1709922399
 GameObject:
   m_ObjectHideFlags: 0
@@ -324,11 +324,11 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1709922399}
-  m_LocalRotation: {x: 0.11794807, y: -0.4368661, z: 0.03788757, w: 0.89095503}
+  m_LocalRotation: {x: 0.16411372, y: -0.20581926, z: 0.3985864, w: 0.8785408}
   m_LocalPosition: {x: -4.4000006, y: 3, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 1
-  m_LocalEulerAnglesHint: {x: 14.08, y: -52.5, z: -2.1}
+  m_LocalEulerAnglesHint: {x: 26.9, y: -15, z: 45.2}
