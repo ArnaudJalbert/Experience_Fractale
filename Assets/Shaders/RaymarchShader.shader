@@ -29,20 +29,46 @@ Shader "PeerPlay/RaymarchShader"
             
 
             // parameters
+
+            // main texture
             sampler2D _MainTex;
+            // frustum -> 4 directions that maps to the 4 corners of the screen
+            uniform float4x4 _CamFrustum, _CamToWorld;
             // check if there are meshes in scene
             uniform sampler2D _CameraDepthTexture;
             // maximum distance the ray is allowed to travel
             uniform float _MaxDistance;
+            
             // shapes for testing
             uniform float4 _TestSphere;
             uniform float4 _TestBox;
+
+            // to repeat the shapes
+            uniform float _ModRepeatX;
+            uniform float _ModRepeatY;
+            uniform float _ModRepeatZ;
+
+                        // to repeat the shapes
+            uniform bool _SwitchRepeatX;
+            uniform bool _SwitchRepeatY;
+            uniform bool _SwitchRepeatZ;
+            
+            // main color of the shapes
+            uniform fixed4 _MainColor;
+            
             // direction of the light
             uniform float3 _LightDirection;
-            // frustum -> 4 directions that maps to the 4 corners of the screen
-            uniform float4x4 _CamFrustum, _CamToWorld;
-            // main color of the shader
-            uniform fixed4 _MainColor;
+            // color of the light
+            uniform float3 _LightColor;
+            // intensity of the light
+            uniform float _LightIntensity; 
+           
+            // distance of shadow
+            uniform float2 _ShadowDistance;
+            // instensity of shadow
+            uniform float _ShadowIntensity;
+            // penumbra coefficient for the shadow
+            uniform float _ShadowPenumbra;
             
             struct appdata
             {
@@ -80,9 +106,22 @@ Shader "PeerPlay/RaymarchShader"
             
             float distanceField(float3 p)
             {
-                // float modX = pMod1(p.x, 7);
-                // float modY = pMod1(p.y, 7);
-                // float modZ = pMod1(p.z, 7);
+                // check if we repeat the shapes
+                if(_SwitchRepeatX)
+                {
+                    float modX = pMod1(p.x, _ModRepeatX);
+                }
+                if(_SwitchRepeatY)
+                {
+                    float modY = pMod1(p.y, _ModRepeatY);
+                }
+                if(_SwitchRepeatZ)
+                {
+                    float modY = pMod1(p.z, _ModRepeatZ);
+                }
+
+                // floor
+                float floor = sdPlane(p, float4(0,1,0,0));
                 
                 float Sphere1 = sdSphere(p - _TestSphere.xyz, _TestSphere.w);
 
@@ -90,7 +129,10 @@ Shader "PeerPlay/RaymarchShader"
                 // TODO implement the other object in the scene
                 // float dist = min(Sphere1);
 
-                return opS(Sphere1, Box1);
+                float sphereBox = opS(Sphere1, Box1);
+
+                // return opU(sphereBox, floor);
+                return opU(sphereBox, floor);
             }
 
             float3 getNormal(float3 p)
@@ -102,6 +144,41 @@ Shader "PeerPlay/RaymarchShader"
                     );
 
                 return normalize(n);
+            }
+
+            float hardShadow(float3 ro, float3 rd, float mint, float maxt, float k)
+            {
+                float result = 1.0;
+                
+                for(float t = mint ; t < maxt;)
+                {
+                    float h = distanceField(ro+rd*t);
+
+                    if (h < 0.001)
+                    {
+                        return 0.0;
+                    }
+
+                    result = min(result, k*h/t);
+                    
+                    t += h;
+                }
+
+                return result;
+            }
+            
+            float3 shading(float3 p, float3 n)
+            {
+                // directional light
+                float result = ((_LightColor * dot(-_LightDirection, n) * 0.5 + 0.5 ) * _LightIntensity);
+
+                float shadow = hardShadow(p, -_LightDirection, _ShadowDistance.x, _ShadowDistance.y, _ShadowPenumbra) * 0.5 + 0.5;
+                
+                shadow = max(0.0, pow(shadow, _ShadowIntensity));
+                
+                result *= shadow;
+                
+                return result;
             }
             
             fixed4 raymarching(float3 ro, float3 rd, float depth)
@@ -128,12 +205,13 @@ Shader "PeerPlay/RaymarchShader"
                     // we check if there is a hit
                     if (d < DISTANCE_EPSILON)
                     {
-                        //
+                        // normal
                         float3 n = getNormal(p);
+
+                        // shading
+                        float3 s = shading(p, n);
                         
-                        float light = dot(-_LightDirection, n);
-                        
-                        result = fixed4(_MainColor.xyz * light, 1);
+                        result = fixed4(_MainColor.xyz * s, 1);
                         break;
                     }
 

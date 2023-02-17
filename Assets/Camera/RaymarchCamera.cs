@@ -1,23 +1,34 @@
-using System;
+ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Experimental.GlobalIllumination;
 
-[RequireComponent(typeof(Camera))]
-[ExecuteInEditMode]
+ [RequireComponent(typeof(Camera))]
+ [ExecuteInEditMode]
 
-public class RaymarchCamera : SceneViewFilter
-{
-    
-    // Unity Parameters ------------------
-    [SerializeField] private Shader shader;
+ public class RaymarchCamera : SceneViewFilter
+ {
+     // shader file
+     [Header("Shader File")] [SerializeField]
+     private Shader shader;
 
-    [SerializeField] private float maxDistance;
+     [SerializeField] private int[] test;
 
-    [SerializeField] private Vector4 testSphere, testBox;
+     // Geometry -------------------------
+     [Header("Geometry")] [SerializeField] private Vector4 testSphere;
+     [SerializeField] private Vector4 testBox;
+     
+     // repeat
+     [SerializeField] private float modRepeatX;
+     [SerializeField] private float modRepeatY;
+     [SerializeField] private float modRepeatZ;
+     
+     [SerializeField] private bool switchRepeatX;
+     [SerializeField] private bool switchRepeatY;
+     [SerializeField] private bool switchRepeatZ;
 
-    [SerializeField] private Color mainColor;
+     [SerializeField] private Color mainColor;
     //-----------------------------------
     
     // Material ------------
@@ -39,6 +50,9 @@ public class RaymarchCamera : SceneViewFilter
 
     // Camera ------------
     private Camera _cam;
+    
+    [Header("Camera")]
+    [SerializeField] private float maxDistance;
 
     public Camera Cam
     {
@@ -53,10 +67,30 @@ public class RaymarchCamera : SceneViewFilter
     }
     //------------------
     
-    //------------------
-    public Transform directionalLight;
-    //------------------
+    // Light + Shading ------------------
+    [Header("Shading")]
+    [SerializeField] private Transform directionalLight;
 
+    [SerializeField] private Color lightColor;
+
+    [SerializeField] private float lightIntensity;
+
+    [SerializeField] private Vector2 shadowDistance;
+
+    [SerializeField] private float shadowIntensity;
+
+    [SerializeField] private float shadowPenumbra;
+    //-------------------------
+
+    private int getSwicthInteger(bool modSwitch)
+    {
+        if (modSwitch)
+        {
+            return 1;
+        }
+
+        return 0;
+    }
     private void OnRenderImage(RenderTexture src, RenderTexture dest)
     {
         if (!RaymarchMaterial)
@@ -66,13 +100,32 @@ public class RaymarchCamera : SceneViewFilter
             return;
         }
         
-        RaymarchMaterial.SetVector("_LightDirection", directionalLight ? directionalLight.forward : Vector3.down);
-        RaymarchMaterial.SetMatrix("_CamFrustum", CamFrustum(Cam));
-        RaymarchMaterial.SetMatrix("_CamToWorld", Cam.cameraToWorldMatrix);
+        // geometry
+        RaymarchMaterial.SetVector("_MainColor", mainColor);
         RaymarchMaterial.SetFloat("_MaxDistance", maxDistance);
         RaymarchMaterial.SetVector("_TestSphere", testSphere);
         RaymarchMaterial.SetVector("_TestBox", testBox);
-        RaymarchMaterial.SetVector("_MainColor", mainColor);
+        
+        // repeats
+        RaymarchMaterial.SetFloat("_ModRepeatX", modRepeatX);
+        RaymarchMaterial.SetFloat("_ModRepeatY", modRepeatY);
+        RaymarchMaterial.SetFloat("_ModRepeatZ", modRepeatZ);
+        
+        RaymarchMaterial.SetInteger("_SwitchRepeatX", getSwicthInteger(switchRepeatX));
+        RaymarchMaterial.SetInteger("_SwitchRepeatY", getSwicthInteger(switchRepeatY));
+        RaymarchMaterial.SetInteger("_SwitchRepeatZ", getSwicthInteger(switchRepeatZ));
+        
+       // camera 
+        RaymarchMaterial.SetMatrix("_CamFrustum", CamFrustum(Cam));
+        RaymarchMaterial.SetMatrix("_CamToWorld", Cam.cameraToWorldMatrix);
+        
+        // shading
+        RaymarchMaterial.SetVector("_LightDirection", directionalLight ? directionalLight.forward : Vector3.up);
+        RaymarchMaterial.SetVector("_LightColor", lightColor);
+        RaymarchMaterial.SetFloat("_LightIntensity", lightIntensity);
+        RaymarchMaterial.SetVector("_ShadowDistance", shadowDistance);
+        RaymarchMaterial.SetFloat("_ShadowIntensity", shadowIntensity);
+        RaymarchMaterial.SetFloat("_ShadowPenumbra", shadowPenumbra);
 
         // setting the texture 
         RenderTexture.active = dest;

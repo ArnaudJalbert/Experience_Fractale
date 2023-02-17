@@ -15,6 +15,13 @@ float sdBox(float3 p, float3 b)
 		length(max(d, 0.0));
 }
 
+// infinite plane
+float sdPlane( float3 p, float4 n )
+{
+	// n must be normalized
+	return dot(p,n) + n.w;
+}
+
 // BOOLEAN OPERATORS //
 
 // Union
