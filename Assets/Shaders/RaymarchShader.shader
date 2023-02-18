@@ -48,7 +48,7 @@ Shader "PeerPlay/RaymarchShader"
             uniform float _ModRepeatY;
             uniform float _ModRepeatZ;
 
-                        // to repeat the shapes
+            // to repeat the shapes
             uniform bool _SwitchRepeatX;
             uniform bool _SwitchRepeatY;
             uniform bool _SwitchRepeatZ;
@@ -69,6 +69,13 @@ Shader "PeerPlay/RaymarchShader"
             uniform float _ShadowIntensity;
             // penumbra coefficient for the shadow
             uniform float _ShadowPenumbra;
+
+            // ambient occlusion
+            uniform int _MaxIterations;
+            uniform float _Accuracy;
+            uniform  float _AoStepSize;
+            uniform  float _AoIterations;
+            uniform  float _AoIntensity;
             
             struct appdata
             {
@@ -133,6 +140,7 @@ Shader "PeerPlay/RaymarchShader"
 
                 // return opU(sphereBox, floor);
                 return opU(sphereBox, floor);
+                // return sphereBox;
             }
 
             float3 getNormal(float3 p)
@@ -166,17 +174,41 @@ Shader "PeerPlay/RaymarchShader"
 
                 return result;
             }
+
+            float ambientOcclusion(float3 p, float3 n)
+            {
+                float ao = 0.0;
+                float dist;
+
+                for (int i = 1; i <= _AoIterations; i++)
+                {
+                    dist = _AoStepSize * i;
+                    ao += max(0.0, (dist - distanceField(p + n * dist)) / dist);
+                }
+
+                return (1.0 - ao * _AoIntensity);
+            }
             
             float3 shading(float3 p, float3 n)
             {
+                // result of shading
+                float3 result;
+                
+                // main color
+                float3 color = _MainColor.rgb;
+                
                 // directional light
-                float result = ((_LightColor * dot(-_LightDirection, n) * 0.5 + 0.5 ) * _LightIntensity);
+                float3 light = ((_LightColor * dot(-_LightDirection, n) * 0.5 + 0.5 ) * _LightIntensity);
 
+                // hard shadow
                 float shadow = hardShadow(p, -_LightDirection, _ShadowDistance.x, _ShadowDistance.y, _ShadowPenumbra) * 0.5 + 0.5;
+
+                // ambient occlusion
+                float ao = ambientOcclusion( p, n);
                 
                 shadow = max(0.0, pow(shadow, _ShadowIntensity));
                 
-                result *= shadow;
+                result = color * light * shadow * ao;
                 
                 return result;
             }
@@ -187,7 +219,7 @@ Shader "PeerPlay/RaymarchShader"
 
                 float dT = 0.0f; // distance traveled by ray
 
-                for (int i = 0; i < MAX_RAYMARCH_ITERATIONS ; i++)
+                for (int i = 0; i < _MaxIterations ; i++)
                 {
                     if(dT > _MaxDistance || dT >= depth)
                     {
@@ -203,7 +235,7 @@ Shader "PeerPlay/RaymarchShader"
                     float d = distanceField(p);
 
                     // we check if there is a hit
-                    if (d < DISTANCE_EPSILON)
+                    if (d < _Accuracy)
                     {
                         // normal
                         float3 n = getNormal(p);
@@ -211,8 +243,7 @@ Shader "PeerPlay/RaymarchShader"
                         // shading
                         float3 s = shading(p, n);
                         
-                        result = fixed4(_MainColor.xyz * s, 1);
-                        break;
+                        return  fixed4(s, 1);
                     }
 
                     // adding the closest distance to the dT variable

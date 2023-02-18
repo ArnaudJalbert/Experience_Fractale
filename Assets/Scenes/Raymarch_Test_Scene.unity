@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.1838174, g: 0.22847751, b: 0.30031994, a: 1}
+  m_IndirectSpecularColor: {r: 0.17621791, g: 0.22054328, b: 0.3028687, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -221,23 +221,27 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   shader: {fileID: 4800000, guid: f4c8fdca34aef454281dbc83e7836ba6, type: 3}
-  test: 
-  testSphere: {x: 0.07, y: 4.7, z: 0, w: 3.67}
-  testBox: {x: 0, y: 4.61, z: 0, w: 3.4}
-  modRepeatX: 6.31
-  modRepeatY: 8
-  modRepeatZ: 8.9
+  maxIterations: 300
+  accuracy: 0.001
+  testSphere: {x: 0.07, y: 4.7, z: 0.06, w: 3.67}
+  testBox: {x: 0, y: 4.24, z: 0, w: 3.4}
+  modRepeatX: 12.3
+  modRepeatY: 22.26
+  modRepeatZ: 28.6
   switchRepeatX: 1
   switchRepeatY: 0
-  switchRepeatZ: 0
-  mainColor: {r: 0.18534178, g: 0.46226418, b: 0.22959465, a: 0}
-  maxDistance: 100000
+  switchRepeatZ: 1
+  mainColor: {r: 0.764151, g: 0.5154415, b: 0.5154415, a: 0}
+  maxDistance: 10000
   directionalLight: {fileID: 1709922401}
   lightColor: {r: 1, g: 0.8259994, b: 0, a: 0}
-  lightIntensity: 1
-  shadowDistance: {x: 0.1, y: 13.3}
+  lightIntensity: 0.7
+  shadowDistance: {x: 0.1, y: 28.2}
   shadowIntensity: 1
-  shadowPenumbra: 52.07
+  shadowPenumbra: 43.6
+  aoStepSize: 0.28
+  aoIterations: 3
+  aoIntensity: 0.24
 --- !u!1 &1709922399
 GameObject:
   m_ObjectHideFlags: 0
@@ -324,11 +328,11 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1709922399}
-  m_LocalRotation: {x: 0.16411372, y: -0.20581926, z: 0.3985864, w: 0.8785408}
-  m_LocalPosition: {x: -4.4000006, y: 3, z: 0}
+  m_LocalRotation: {x: 0.53913826, y: 0, z: 0, w: 0.84221727}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 1
-  m_LocalEulerAnglesHint: {x: 26.9, y: -15, z: 45.2}
+  m_LocalEulerAnglesHint: {x: 65.25, y: 0, z: 0}
