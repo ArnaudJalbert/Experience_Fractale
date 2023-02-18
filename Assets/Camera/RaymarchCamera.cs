@@ -12,9 +12,11 @@ using UnityEngine.Experimental.GlobalIllumination;
      // shader file
      [Header("Shader File")] [SerializeField]
      private Shader shader;
+     
+     [Range(1,300)] [SerializeField] private int maxIterations;
 
-     [SerializeField] private int[] test;
-
+     [Range(0.1f, 0.001f)] [SerializeField] private float accuracy;
+     
      // Geometry -------------------------
      [Header("Geometry")] [SerializeField] private Vector4 testSphere;
      [SerializeField] private Vector4 testBox;
@@ -81,6 +83,16 @@ using UnityEngine.Experimental.GlobalIllumination;
 
     [SerializeField] private float shadowPenumbra;
     //-------------------------
+    
+    //------------------
+    // ambient occlusion
+    [Header("Ambien Occlusion")]
+
+    [Range(0.1f, 10f)][SerializeField] private float aoStepSize;
+    
+    [Range(1,5)][SerializeField] private int aoIterations;
+    
+    [Range(0f, 1f)][SerializeField] private float aoIntensity;
 
     private int getSwicthInteger(bool modSwitch)
     {
@@ -100,6 +112,12 @@ using UnityEngine.Experimental.GlobalIllumination;
             return;
         }
         
+        // ambient occlusion
+        RaymarchMaterial.SetInteger("_AoIterations", aoIterations);
+        RaymarchMaterial.SetFloat("_Accuracy", accuracy);
+        RaymarchMaterial.SetFloat("_AoStepSize", aoStepSize);
+        RaymarchMaterial.SetFloat("_AoIntensity", aoIntensity);
+        
         // geometry
         RaymarchMaterial.SetVector("_MainColor", mainColor);
         RaymarchMaterial.SetFloat("_MaxDistance", maxDistance);
@@ -116,6 +134,7 @@ using UnityEngine.Experimental.GlobalIllumination;
         RaymarchMaterial.SetInteger("_SwitchRepeatZ", getSwicthInteger(switchRepeatZ));
         
        // camera 
+       RaymarchMaterial.SetInteger("_MaxIterations", maxIterations);
         RaymarchMaterial.SetMatrix("_CamFrustum", CamFrustum(Cam));
         RaymarchMaterial.SetMatrix("_CamToWorld", Cam.cameraToWorldMatrix);
         
