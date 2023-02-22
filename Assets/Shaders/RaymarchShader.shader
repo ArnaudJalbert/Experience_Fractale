@@ -128,19 +128,15 @@ Shader "PeerPlay/RaymarchShader"
                 }
 
                 // floor
-                float floor = sdPlane(p, float4(0,1,0,0));
-                
-                float Sphere1 = sdSphere(p - _TestSphere.xyz, _TestSphere.w);
+                float floor = plane(p, float4(0,1,0,0), 0);
 
-                float Box1 = sdBox(p-_TestBox.xyz, _TestBox.w);
+                float testShape = octahedron(p - _TestBox.xyz, 3);
                 // TODO implement the other object in the scene
                 // float dist = min(Sphere1);
 
-                float sphereBox = opS(Sphere1, Box1);
-
                 // return opU(sphereBox, floor);
-                return opU(sphereBox, floor);
-                // return sphereBox;
+                // return opU(sphereBox, floor);
+                return opU(testShape, floor);
             }
 
             float3 getNormal(float3 p)
