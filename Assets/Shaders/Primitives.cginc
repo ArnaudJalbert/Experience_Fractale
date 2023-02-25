@@ -1,6 +1,18 @@
 ﻿// ----------------
 // primitive shapes
 
+#ifndef PRIMITIVES
+#define PRIMITIVES
+
+#define INFINTY 999999999999999.0
+
+// alterations if wanted
+float elongate(in float3 p, in float3 h )
+{
+	float3 q = abs(p)-h;
+	return max(q,0.0) + min(max(q.x,max(q.y,q.z)),0.0);
+}
+
 // p: current point
 
 // Sphere
@@ -99,30 +111,62 @@ float octahedron( float3 p, float s)
 	return (p.x+p.y+p.z-s)*0.57735027;
 }
 
+
+// Cut Hollow Sphere
+// r: radius of the cut
+// h: height of the cut
+// t: size of the sphere
+float cutHollowSphere(float3 p, float r, float h, float t)
+{
+	// sampling independent computations (only depend on shape)
+	float w = sqrt(r*r-h*h);
+  
+	// sampling dependant computations
+	float2 q = float2( length(p.xz), p.y );
+	return ((h*q.x<w*q.y) ? length(q-float2(w,h)) : 
+							abs(length(q)-r) ) - t;
+}
+
+
+// Death Star
+float deathStar( float3 p2, float ra, float rb, in float d )
+{
+  // sampling independent computations (only depend on shape)
+  float a = (ra*ra - rb*rb + d*d)/(2.0*d);
+  float b = sqrt(max(ra*ra-a*a,0.0));
+	
+  // sampling dependant computations
+  float2 p = float2( p2.x, length(p2.yz) );
+  if( p.x*b-p.y*a > d*max(b-p.y,0.0) )
+  	return length(p-float2(a,b));
+	else
+		return max( (length(p          )-ra),
+				   -(length(p-float2(d,0))-rb));
+	}
 // ----------------
 
 // BOOLEAN OPERATORS //
 
 // Union
-float opU(float d1, float d2)
+float shapeUnion(float d1, float d2)
 {
 	return min(d1, d2);
 }
 
 // Subtraction
-float opS(float d1, float d2)
+float shapeSubtraction(float d1, float d2)
 {
 	return max(-d1, d2);
 }
 
 // Intersection
-float opI(float d1, float d2)
+float shapeIntersection(float d1, float d2)
 {
 	return max(d1, d2);
 }
 
 // Mod Position Axis
-float pMod1 (inout float p, float size)
+float modAxis (inout float p, float size)
 {
 	float halfsize = size * 0.5;
 	float c = floor((p+halfsize)/size);
@@ -130,3 +174,5 @@ float pMod1 (inout float p, float size)
 	p = fmod(-p+halfsize,size)-halfsize;
 	return c;
 }
+
+#endif

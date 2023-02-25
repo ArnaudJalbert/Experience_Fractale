@@ -20,8 +20,12 @@ Shader "PeerPlay/RaymarchShader"
             // adding a target
             #pragma target 3.0
 
+            #ifndef RAYMARCHER_SHADER
+            #define RAYMARCHER_SHADER
+            
             #include "UnityCG.cginc"
-            #include "DistanceFunctions.cginc"
+            #include "Primitives.cginc"
+            #include "MengerSpone.cginc"
 
             #define MAX_RAYMARCH_ITERATIONS 256
             #define DISTANCE_EPSILON 0.01f
@@ -116,28 +120,29 @@ Shader "PeerPlay/RaymarchShader"
                 // check if we repeat the shapes
                 if(_SwitchRepeatX)
                 {
-                    float modX = pMod1(p.x, _ModRepeatX);
+                    float modX = modAxis(p.x, _ModRepeatX);
                 }
                 if(_SwitchRepeatY)
                 {
-                    float modY = pMod1(p.y, _ModRepeatY);
+                    float modY = modAxis(p.y, _ModRepeatY);
                 }
                 if(_SwitchRepeatZ)
                 {
-                    float modY = pMod1(p.z, _ModRepeatZ);
+                    float modY = modAxis(p.z, _ModRepeatZ);
                 }
 
                 // floor
-                float floor = plane(p, float4(0,1,0,0), 0);
+                // float floor = plane(p, float4(0,1,0,0), 0);
 
-                float testShape = octahedron(p - _TestBox.xyz, 3);
+                // float testShape = octahedron(p - _TestBox.xyz, 10);
                 // TODO implement the other object in the scene
                 // float dist = min(Sphere1);
 
-                // return opU(sphereBox, floor);
-                // return opU(sphereBox, floor);
-                return opU(testShape, floor);
+                float2 spenger = map(p);
+                
+                return spenger.x;
             }
+            
 
             float3 getNormal(float3 p)
             {
@@ -273,6 +278,8 @@ Shader "PeerPlay/RaymarchShader"
                 // return the result
                 return fixed4(hitCheck, 1.0);
             }
+
+            #endif
             ENDCG
         }
     }

@@ -15,7 +15,7 @@ using UnityEngine.Experimental.GlobalIllumination;
      
      [Range(1,300)] [SerializeField] private int maxIterations;
 
-     [Range(0.1f, 0.001f)] [SerializeField] private float accuracy;
+     [Range(0.1f, 0.00001f)] [SerializeField] private float accuracy;
      
      // Geometry -------------------------
      [Header("Geometry")] [SerializeField] private Vector4 testSphere;
