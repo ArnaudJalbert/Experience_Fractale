@@ -1,10 +1,10 @@
- using System;
-using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
-using UnityEngine.Experimental.GlobalIllumination;
+using System.IO;
 
- [RequireComponent(typeof(Camera))]
+
+[RequireComponent(typeof(Camera))]
  [ExecuteInEditMode]
 
  public class RaymarchCamera : SceneViewFilter
@@ -13,24 +13,81 @@ using UnityEngine.Experimental.GlobalIllumination;
      [Header("Shader File")] [SerializeField]
      private Shader shader;
      
-     [Range(1,300)] [SerializeField] private int maxIterations;
+     [Range(1,300)] [SerializeField] private int maxIterations = 300;
 
-     [Range(0.1f, 0.00001f)] [SerializeField] private float accuracy;
+     [Range(0.1f, 0.000001f)] [SerializeField] private float accuracy = 0.0001f;
+     
+     // Camera ------------
+     private Camera _cam;
+    
+     [Header("Camera")]
+     [SerializeField] private float maxDistance = 1000f;
+
+     public Camera Cam
+     {
+         get
+         {
+             if (!_cam)
+             {
+                 _cam = GetComponent<Camera>();
+             }
+             return _cam;
+         }
+     }
+     //------------------
      
      // Geometry -------------------------
-     [Header("Geometry")] [SerializeField] private Vector4 testSphere;
-     [SerializeField] private Vector4 testBox;
+     
+     private static int _mengerSpongesQuantity = 5;
+     [Header("Geometry")] 
+     [SerializeField] private List<MengerSponge> mengerSponges = new List<MengerSponge>(_mengerSpongesQuantity);
+     
+     private List<Vector4> GetMengerSpongesVectors()
+     {
+         List<Vector4> mengerSpongesVector = new List<Vector4>();
+         
+         foreach (var mengerSponge in mengerSponges)
+         {
+             mengerSpongesVector.Add(mengerSponge.Coords);
+         }
+
+         return mengerSpongesVector;
+     }
+     
+     private List<float> GetMengerSpongesScales()
+     {
+         List<float> mengerSpongesScales = new List<float>();
+         
+         foreach (var mengerSponge in mengerSponges)
+         {
+             mengerSpongesScales.Add(mengerSponge.Scale);
+         }
+
+         return mengerSpongesScales;
+     }
+     
+     private List<float> GetMengerSpongesRepetitions()
+     {
+         List<float> getMengerSpongesRepetitions = new List<float>();
+         
+         foreach (var mengerSponge in mengerSponges)
+         {
+             getMengerSpongesRepetitions.Add(mengerSponge.Repetitions);
+         }
+
+         return getMengerSpongesRepetitions;
+     }
      
      // repeat
      [SerializeField] private float modRepeatX;
      [SerializeField] private float modRepeatY;
      [SerializeField] private float modRepeatZ;
-     
      [SerializeField] private bool switchRepeatX;
      [SerializeField] private bool switchRepeatY;
      [SerializeField] private bool switchRepeatZ;
 
-     [SerializeField] private Color mainColor;
+     [SerializeField] private Color mainColor = Color.grey;
+
     //-----------------------------------
     
     // Material ------------
@@ -50,50 +107,31 @@ using UnityEngine.Experimental.GlobalIllumination;
     }
     //----------------------
 
-    // Camera ------------
-    private Camera _cam;
-    
-    [Header("Camera")]
-    [SerializeField] private float maxDistance;
-
-    public Camera Cam
-    {
-        get
-        {
-            if (!_cam)
-            {
-                _cam = GetComponent<Camera>();
-            }
-            return _cam;
-        }
-    }
-    //------------------
-    
     // Light + Shading ------------------
     [Header("Shading")]
     [SerializeField] private Transform directionalLight;
 
-    [SerializeField] private Color lightColor;
+    [SerializeField] private Color lightColor = Color.white;
 
-    [SerializeField] private float lightIntensity;
+    [SerializeField] private float lightIntensity = 1;
 
-    [SerializeField] private Vector2 shadowDistance;
+    [SerializeField] private Vector2 shadowDistance = new Vector2(1.0f, 20.0f);
 
-    [SerializeField] private float shadowIntensity;
+    [SerializeField] private float shadowIntensity = 1;
 
-    [SerializeField] private float shadowPenumbra;
+    [SerializeField] private float shadowPenumbra = 5.0f;
     //-------------------------
     
     //------------------
     // ambient occlusion
     [Header("Ambien Occlusion")]
 
-    [Range(0.1f, 10f)][SerializeField] private float aoStepSize;
+    [Range(0.1f, 10f)][SerializeField] private float aoStepSize = 1.0f;
     
-    [Range(1,5)][SerializeField] private int aoIterations;
+    [Range(1,5)][SerializeField] private int aoIterations = 2;
     
-    [Range(0f, 1f)][SerializeField] private float aoIntensity;
-
+    [Range(0f, 1f)][SerializeField] private float aoIntensity = 0.5f;
+    //------------------
     private int getSwicthInteger(bool modSwitch)
     {
         if (modSwitch)
@@ -103,15 +141,10 @@ using UnityEngine.Experimental.GlobalIllumination;
 
         return 0;
     }
-    private void OnRenderImage(RenderTexture src, RenderTexture dest)
+
+    private void InitShaderParams()
     {
-        if (!RaymarchMaterial)
-        {
-            // sends source texture to destination texture with the shader
-            Graphics.Blit(src, dest);
-            return;
-        }
-        
+
         // ambient occlusion
         RaymarchMaterial.SetInteger("_AoIterations", aoIterations);
         RaymarchMaterial.SetFloat("_Accuracy", accuracy);
@@ -121,9 +154,17 @@ using UnityEngine.Experimental.GlobalIllumination;
         // geometry
         RaymarchMaterial.SetVector("_MainColor", mainColor);
         RaymarchMaterial.SetFloat("_MaxDistance", maxDistance);
-        RaymarchMaterial.SetVector("_TestSphere", testSphere);
-        RaymarchMaterial.SetVector("_TestBox", testBox);
         
+        
+        if (mengerSponges.Count > 0 && mengerSponges.Count <= 5)
+        {
+            RaymarchMaterial.SetInteger("_MengerSpongesLimit", 5);
+            RaymarchMaterial.SetFloatArray("_MengerSpongesScales", GetMengerSpongesScales());
+            RaymarchMaterial.SetVectorArray("_MengerSpongesVectors", GetMengerSpongesVectors());
+            RaymarchMaterial.SetFloatArray("_MengerSpongesRep", GetMengerSpongesRepetitions());
+            
+        }
+
         // repeats
         RaymarchMaterial.SetFloat("_ModRepeatX", modRepeatX);
         RaymarchMaterial.SetFloat("_ModRepeatY", modRepeatY);
@@ -133,8 +174,8 @@ using UnityEngine.Experimental.GlobalIllumination;
         RaymarchMaterial.SetInteger("_SwitchRepeatY", getSwicthInteger(switchRepeatY));
         RaymarchMaterial.SetInteger("_SwitchRepeatZ", getSwicthInteger(switchRepeatZ));
         
-       // camera 
-       RaymarchMaterial.SetInteger("_MaxIterations", maxIterations);
+        // camera 
+        RaymarchMaterial.SetInteger("_MaxIterations", maxIterations);
         RaymarchMaterial.SetMatrix("_CamFrustum", CamFrustum(Cam));
         RaymarchMaterial.SetMatrix("_CamToWorld", Cam.cameraToWorldMatrix);
         
@@ -145,7 +186,19 @@ using UnityEngine.Experimental.GlobalIllumination;
         RaymarchMaterial.SetVector("_ShadowDistance", shadowDistance);
         RaymarchMaterial.SetFloat("_ShadowIntensity", shadowIntensity);
         RaymarchMaterial.SetFloat("_ShadowPenumbra", shadowPenumbra);
+    }
+    
+    private void OnRenderImage(RenderTexture src, RenderTexture dest)
+    {
+        if (!RaymarchMaterial)
+        {
+            // sends source texture to destination texture with the shader
+            Graphics.Blit(src, dest);
+            return;
+        }
 
+        InitShaderParams();
+        
         // setting the texture 
         RenderTexture.active = dest;
         RaymarchMaterial.SetTexture("_MainTex", src);
@@ -210,6 +263,20 @@ using UnityEngine.Experimental.GlobalIllumination;
         return frustum;
     }
 
+    
+    static public void ClearShaderCache_Command()
+    {
+        var shaderCachePath = Path.Combine( Application.dataPath , "../Library/ShaderCache");
+        Directory.Delete( shaderCachePath , true );
+    }
+
+    public override void OnValidate()
+    {
+        base.OnValidate();
+
+    }
+    
+    
     // Start is called before the first frame update
     void Start()
     {

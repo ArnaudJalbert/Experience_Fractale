@@ -54,13 +54,14 @@ float pMod ( float p, float size)
     return p;
 }
 
-float2 map(float3 p)
+float2 map(float3 p, float scale, float size, int rep)
 {
-    float2 d = float2(spongeBox(p, float3(1.0,1.0,1.0)), 0);
+    
+    float2 d = float2(spongeBox(p, float3(size, size, size)), 0);
 
-    float s = 3.0;
+    float s = 3.0 + scale;
 
-    for (int i = 0; i < 5; i++)
+    for (int i = 0; i < rep; i++)
     {
         p.x = pMod(p.x, 2/s);
         p.y = pMod(p.y, 2/s);

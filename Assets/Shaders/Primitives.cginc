@@ -6,6 +6,9 @@
 
 #define INFINTY 999999999999999.0
 
+string test = "allo";
+
+
 // alterations if wanted
 float elongate(in float3 p, in float3 h )
 {

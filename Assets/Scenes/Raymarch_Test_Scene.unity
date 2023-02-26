@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.1838727, g: 0.2290047, b: 0.3030366, a: 1}
+  m_IndirectSpecularColor: {r: 0.15501805, g: 0.1768825, b: 0.18905799, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -222,26 +222,40 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   shader: {fileID: 4800000, guid: f4c8fdca34aef454281dbc83e7836ba6, type: 3}
   maxIterations: 300
-  accuracy: 0.001
-  testSphere: {x: 0.07, y: 4.23, z: 0.07, w: 1}
-  testBox: {x: 0, y: 0, z: 0, w: 2.2}
-  modRepeatX: 43
-  modRepeatY: 73.6
-  modRepeatZ: 34.63
+  accuracy: 0.000001
+  maxDistance: 1000
+  mengerSponges:
+  - _coords: {x: 20.47, y: 6.94, z: -2.58, w: 1.84}
+    _scale: 0.42
+    _repetitions: 6
+  - _coords: {x: 16.32, y: 6.94, z: -2.58, w: 1.84}
+    _scale: 0.42
+    _repetitions: 6
+  - _coords: {x: 10.88, y: 6.94, z: -2.58, w: 1.84}
+    _scale: 0.42
+    _repetitions: 6
+  - _coords: {x: 25, y: 6.94, z: -2.58, w: 1.84}
+    _scale: 0.42
+    _repetitions: 6
+  - _coords: {x: 16.32, y: 14.2, z: -2.58, w: 1.84}
+    _scale: 0.42
+    _repetitions: 6
+  modRepeatX: 0
+  modRepeatY: 0
+  modRepeatZ: 0
   switchRepeatX: 0
   switchRepeatY: 0
   switchRepeatZ: 0
-  mainColor: {r: 0.764151, g: 0.5154415, b: 0.5154415, a: 0}
-  maxDistance: 1000000
-  directionalLight: {fileID: 1709922401}
-  lightColor: {r: 1, g: 0.8259994, b: 0, a: 0}
-  lightIntensity: 0.7
-  shadowDistance: {x: 0.1, y: 77.97}
-  shadowIntensity: 1.4
-  shadowPenumbra: 26.82
-  aoStepSize: 0.44
+  mainColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
+  directionalLight: {fileID: 0}
+  lightColor: {r: 1, g: 1, b: 1, a: 1}
+  lightIntensity: 1
+  shadowDistance: {x: 3.97, y: 7.3}
+  shadowIntensity: 1
+  shadowPenumbra: 5
+  aoStepSize: 1
   aoIterations: 2
-  aoIntensity: 0.35
+  aoIntensity: 0.5
 --- !u!1 &1709922399
 GameObject:
   m_ObjectHideFlags: 0
@@ -328,11 +342,11 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1709922399}
-  m_LocalRotation: {x: 0.013501431, y: -0.9648273, z: 0.25762248, w: 0.05056449}
+  m_LocalRotation: {x: -0.026180424, y: -0.730815, z: 0.028075095, w: -0.6814953}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 1
-  m_LocalEulerAnglesHint: {x: 29.9, y: -174, z: 0}
+  m_LocalEulerAnglesHint: {x: 4.4, y: -986, z: 0}

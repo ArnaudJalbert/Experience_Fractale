@@ -14,6 +14,8 @@ Shader "PeerPlay/RaymarchShader"
         Pass
         {
             CGPROGRAM
+// Upgrade NOTE: excluded shader from DX11, OpenGL ES 2.0 because it uses unsized arrays
+#pragma exclude_renderers d3d11 gles
             #pragma vertex vert
             #pragma fragment frag
 
@@ -42,10 +44,14 @@ Shader "PeerPlay/RaymarchShader"
             uniform sampler2D _CameraDepthTexture;
             // maximum distance the ray is allowed to travel
             uniform float _MaxDistance;
+
+            #define MENGER_SPONGES_LIMIT 5
+
+            int _MengerSpongesLimit;
             
-            // shapes for testing
-            uniform float4 _TestSphere;
-            uniform float4 _TestBox;
+            float4 _MengerSpongesVectors[MENGER_SPONGES_LIMIT];
+            float _MengerSpongesScales[MENGER_SPONGES_LIMIT];
+            int _MengerSpongesRep[MENGER_SPONGES_LIMIT];
 
             // to repeat the shapes
             uniform float _ModRepeatX;
@@ -131,16 +137,19 @@ Shader "PeerPlay/RaymarchShader"
                     float modY = modAxis(p.z, _ModRepeatZ);
                 }
 
-                // floor
-                // float floor = plane(p, float4(0,1,0,0), 0);
+                float2 closestPoint = 999999;
 
-                // float testShape = octahedron(p - _TestBox.xyz, 10);
-                // TODO implement the other object in the scene
-                // float dist = min(Sphere1);
-
-                float2 spenger = map(p);
+                for(int i = 0; i < _MengerSpongesLimit; i++)
+                {
+                    float2 current = map(p - _MengerSpongesVectors[i].xyz,
+                                    _MengerSpongesScales[i],
+                                    _MengerSpongesVectors[i].w,
+                                    _MengerSpongesRep[i]);
+                    
+                    closestPoint = min(closestPoint, current);
+                }
                 
-                return spenger.x;
+                return closestPoint.x;
             }
             
 
