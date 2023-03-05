@@ -14,14 +14,20 @@ Shader "PeerPlay/RaymarchShader"
         Pass
         {
             CGPROGRAM
+// Upgrade NOTE: excluded shader from DX11, OpenGL ES 2.0 because it uses unsized arrays
+#pragma exclude_renderers d3d11 gles
             #pragma vertex vert
             #pragma fragment frag
 
             // adding a target
             #pragma target 3.0
 
+            #ifndef RAYMARCHER_SHADER
+            #define RAYMARCHER_SHADER
+            
             #include "UnityCG.cginc"
-            #include "DistanceFunctions.cginc"
+            #include "Primitives.cginc"
+            #include "MengerSpone.cginc"
 
             #define MAX_RAYMARCH_ITERATIONS 256
             #define DISTANCE_EPSILON 0.01f
@@ -38,10 +44,14 @@ Shader "PeerPlay/RaymarchShader"
             uniform sampler2D _CameraDepthTexture;
             // maximum distance the ray is allowed to travel
             uniform float _MaxDistance;
+
+            #define MENGER_SPONGES_LIMIT 5
+
+            int _MengerSpongesLimit;
             
-            // shapes for testing
-            uniform float4 _TestSphere;
-            uniform float4 _TestBox;
+            float4 _MengerSpongesVectors[MENGER_SPONGES_LIMIT];
+            float _MengerSpongesScales[MENGER_SPONGES_LIMIT];
+            int _MengerSpongesRep[MENGER_SPONGES_LIMIT];
 
             // to repeat the shapes
             uniform float _ModRepeatX;
@@ -116,32 +126,32 @@ Shader "PeerPlay/RaymarchShader"
                 // check if we repeat the shapes
                 if(_SwitchRepeatX)
                 {
-                    float modX = pMod1(p.x, _ModRepeatX);
+                    float modX = modAxis(p.x, _ModRepeatX);
                 }
                 if(_SwitchRepeatY)
                 {
-                    float modY = pMod1(p.y, _ModRepeatY);
+                    float modY = modAxis(p.y, _ModRepeatY);
                 }
                 if(_SwitchRepeatZ)
                 {
-                    float modY = pMod1(p.z, _ModRepeatZ);
+                    float modY = modAxis(p.z, _ModRepeatZ);
                 }
 
-                // floor
-                float floor = sdPlane(p, float4(0,1,0,0));
+                float2 closestPoint = 999999;
+
+                for(int i = 0; i < _MengerSpongesLimit; i++)
+                {
+                    float2 current = map(p - _MengerSpongesVectors[i].xyz,
+                                    _MengerSpongesScales[i],
+                                    _MengerSpongesVectors[i].w,
+                                    _MengerSpongesRep[i]);
+                    
+                    closestPoint = min(closestPoint, current);
+                }
                 
-                float Sphere1 = sdSphere(p - _TestSphere.xyz, _TestSphere.w);
-
-                float Box1 = sdBox(p-_TestBox.xyz, _TestBox.w);
-                // TODO implement the other object in the scene
-                // float dist = min(Sphere1);
-
-                float sphereBox = opS(Sphere1, Box1);
-
-                // return opU(sphereBox, floor);
-                return opU(sphereBox, floor);
-                // return sphereBox;
+                return closestPoint.x;
             }
+            
 
             float3 getNormal(float3 p)
             {
@@ -277,6 +287,8 @@ Shader "PeerPlay/RaymarchShader"
                 // return the result
                 return fixed4(hitCheck, 1.0);
             }
+
+            #endif
             ENDCG
         }
     }
