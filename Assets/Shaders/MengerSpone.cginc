@@ -57,7 +57,7 @@ float pMod ( float p, float size)
 float2 map(float3 p, float scale, float size, int rep)
 {
     
-    float2 d = float2(spongeBox(p, float3(size, size, size)), 0);
+    float2 d = float2(octahedron(p, float3(size, size, size)), 0);
 
     float s = 3.0 + scale;
 
