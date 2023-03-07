@@ -221,27 +221,27 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   shader: {fileID: 4800000, guid: f4c8fdca34aef454281dbc83e7836ba6, type: 3}
-  maxIterations: 500
-  accuracy: 0.002
-  maxDistance: 1000.11
+  maxIterations: 40790
+  accuracy: 0.00001
+  maxDistance: 1e+14
   mengerSponges:
-  - _coords: {x: 0, y: 0.1, z: 0, w: 2.51}
+  - _coords: {x: 0.42, y: 0.26, z: 0.75, w: 2.51}
     _scale: 2.01
     _repetitions: 10
   modRepeatX: 3
   modRepeatY: 5.7
-  modRepeatZ: 23.78
-  switchRepeatX: 1
+  modRepeatZ: 2
+  switchRepeatX: 0
   switchRepeatY: 0
   switchRepeatZ: 0
-  mainColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
+  mainColor: {r: 0.21239765, g: 0.37697762, b: 0.4056604, a: 1}
   directionalLight: {fileID: 1709922401}
   lightColor: {r: 1, g: 1, b: 1, a: 1}
   lightIntensity: 1
   shadowDistance: {x: 3.97, y: 7.3}
   shadowIntensity: 2.54
   shadowPenumbra: 1.26
-  aoStepSize: 0.5
+  aoStepSize: 0.9
   aoIterations: 3
   aoIntensity: 0.22
 --- !u!1 &1709922399
