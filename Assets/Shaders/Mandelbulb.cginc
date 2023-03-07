@@ -1,7 +1,7 @@
 #ifndef MANDELBULB
 #define MANDELBULB
 
-float mandelbulbMap( float3 p, int rep)
+float2 mandelbulbMap( float3 p, int rep)
 {
 
     float3 zeta = p;
@@ -31,7 +31,7 @@ float mandelbulbMap( float3 p, int rep)
         if( m > n*n )
             break;
     }
-
+    
     return 0.25*log(m)*sqrt(m)/dz;
     
 }

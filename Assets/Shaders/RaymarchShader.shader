@@ -122,7 +122,7 @@ Shader "PeerPlay/RaymarchShader"
                 return o;
             }
             
-            float distanceField(float3 p)
+            float2 distanceField(float3 p)
             {
                 // check if we repeat the shapes
                 if(_SwitchRepeatX)
@@ -152,16 +152,16 @@ Shader "PeerPlay/RaymarchShader"
 
                 closestPoint = mandelbulbMap(p - _MengerSpongesVectors[0], 6);
                 
-                return closestPoint.x;
+                return closestPoint;
             }
             
 
             float3 getNormal(float3 p)
             {
                 float3 n = float3(
-                    distanceField(p+OFFSET.xyy) - distanceField(p-OFFSET.xyy),
-                    distanceField(p+OFFSET.yxy) - distanceField(p-OFFSET.yxy),
-                    distanceField(p+OFFSET.yyx) - distanceField(p-OFFSET.yyx)
+                    distanceField(p+OFFSET.xyy).x - distanceField(p-OFFSET.xyy).x,
+                    distanceField(p+OFFSET.yxy).x - distanceField(p-OFFSET.yxy).x,
+                    distanceField(p+OFFSET.yyx).x - distanceField(p-OFFSET.yyx.x).x
                     );
 
                 return normalize(n);

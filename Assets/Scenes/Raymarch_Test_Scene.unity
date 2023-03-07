@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.15501805, g: 0.1768825, b: 0.18905799, a: 1}
+  m_IndirectSpecularColor: {r: 0.15501742, g: 0.17688178, b: 0.1890576, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -201,7 +201,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 524447366}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 4.79, y: 1, z: -10}
+  m_LocalPosition: {x: 0, y: 0, z: -2.611}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -221,17 +221,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   shader: {fileID: 4800000, guid: f4c8fdca34aef454281dbc83e7836ba6, type: 3}
-  maxIterations: 300
-  accuracy: 0.000001
+  maxIterations: 500
+  accuracy: 0.002
   maxDistance: 1000.11
   mengerSponges:
-  - _coords: {x: 0, y: 0, z: 0, w: 2.51}
+  - _coords: {x: 0, y: 0.1, z: 0, w: 2.51}
     _scale: 2.01
-    _repetitions: 7
-  modRepeatX: 3.44
+    _repetitions: 10
+  modRepeatX: 3
   modRepeatY: 5.7
   modRepeatZ: 23.78
-  switchRepeatX: 0
+  switchRepeatX: 1
   switchRepeatY: 0
   switchRepeatZ: 0
   mainColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
@@ -239,11 +239,11 @@ MonoBehaviour:
   lightColor: {r: 1, g: 1, b: 1, a: 1}
   lightIntensity: 1
   shadowDistance: {x: 3.97, y: 7.3}
-  shadowIntensity: 1
-  shadowPenumbra: 5
-  aoStepSize: 0.29
+  shadowIntensity: 2.54
+  shadowPenumbra: 1.26
+  aoStepSize: 0.5
   aoIterations: 3
-  aoIntensity: 0.254
+  aoIntensity: 0.22
 --- !u!1 &1709922399
 GameObject:
   m_ObjectHideFlags: 0
@@ -330,11 +330,11 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1709922399}
-  m_LocalRotation: {x: -0.026180424, y: -0.730815, z: 0.028075095, w: -0.6814953}
+  m_LocalRotation: {x: -0.025451573, y: -0.7480575, z: 0.028737485, w: -0.6625228}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 1
-  m_LocalEulerAnglesHint: {x: 4.4, y: -986, z: 0}
+  m_LocalEulerAnglesHint: {x: 4.4, y: -983.06, z: 0}

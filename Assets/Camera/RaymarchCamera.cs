@@ -13,7 +13,7 @@ using System.IO;
      [Header("Shader File")] [SerializeField]
      private Shader shader;
      
-     [Range(1,1000)] [SerializeField] private int maxIterations = 300;
+     [Range(1,100000)] [SerializeField] private int maxIterations = 300;
 
      [Range(0.1f, 0.000000001f)] [SerializeField] private float accuracy = 0.0001f;
      
