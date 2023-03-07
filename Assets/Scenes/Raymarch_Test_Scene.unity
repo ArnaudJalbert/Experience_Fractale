@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.15501742, g: 0.17688178, b: 0.1890576, a: 1}
+  m_IndirectSpecularColor: {r: 0.18346906, g: 0.22746564, b: 0.29666695, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -160,8 +160,8 @@ Camera:
   m_GameObject: {fileID: 524447366}
   m_Enabled: 1
   serializedVersion: 2
-  m_ClearFlags: 1
-  m_BackGroundColor: {r: 0.19215687, g: 0.3019608, b: 0.4745098, a: 0}
+  m_ClearFlags: 2
+  m_BackGroundColor: {r: 0.9528302, g: 0.7084134, b: 0.4179868, a: 0}
   m_projectionMatrixMode: 1
   m_GateFitMode: 2
   m_FOVAxisMode: 0
@@ -177,7 +177,7 @@ Camera:
   near clip plane: 0.3
   far clip plane: 1000
   field of view: 52.5
-  orthographic: 0
+  orthographic: 1
   orthographic size: 5
   m_Depth: -1
   m_CullingMask:
@@ -222,29 +222,33 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   shader: {fileID: 4800000, guid: f4c8fdca34aef454281dbc83e7836ba6, type: 3}
-  maxIterations: 40790
-  accuracy: 0.00001
-  maxDistance: 1e+14
-  mengerSponges:
-  - _coords: {x: 0.42, y: 0.26, z: 0.75, w: 2.51}
-    _scale: 2.01
-    _repetitions: 10
-  modRepeatX: 3
-  modRepeatY: 5.7
-  modRepeatZ: 2
-  switchRepeatX: 0
-  switchRepeatY: 0
-  switchRepeatZ: 0
+  maxIterations: 500
+  accuracy: 0.001
+  maxDistance: 1000
+  mengerSponges: []
+  mandelbulbs:
+  - _coords: {x: 1.15, y: 0, z: -0.06, w: 0}
+    _scale: 0.49
+    _repetitions: 30
+    iterations: 9.410076
+  animateMandelbulb: 1
+  animateSpeed: 0.03
+  modRepeatX: 8.5
+  modRepeatY: 4.5
+  modRepeatZ: 15.7
+  switchRepeatX: 1
+  switchRepeatY: 1
+  switchRepeatZ: 1
   mainColor: {r: 0.21239765, g: 0.37697762, b: 0.4056604, a: 1}
   directionalLight: {fileID: 1709922401}
   lightColor: {r: 1, g: 1, b: 1, a: 1}
   lightIntensity: 1
-  shadowDistance: {x: 3.97, y: 7.3}
-  shadowIntensity: 2.54
-  shadowPenumbra: 1.26
-  aoStepSize: 0.9
-  aoIterations: 3
-  aoIntensity: 0.22
+  shadowDistance: {x: 2, y: 10}
+  shadowIntensity: 0.99
+  shadowPenumbra: 5
+  aoStepSize: 0.5
+  aoIterations: 2
+  aoIntensity: 0.14
 --- !u!114 &524447371
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -259,9 +263,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mainSpeed: 2
   shiftAdd: 2
-  maxShift: 2
+  maxShift: 5
   camSens: 0.15
-  totalRun: 1
 --- !u!1 &1709922399
 GameObject:
   m_ObjectHideFlags: 0
@@ -348,11 +351,11 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1709922399}
-  m_LocalRotation: {x: -0.025451573, y: -0.7480575, z: 0.028737485, w: -0.6625228}
+  m_LocalRotation: {x: 0.20726505, y: -0.08660838, z: 0.018424977, w: 0.97426933}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 1
-  m_LocalEulerAnglesHint: {x: 4.4, y: -983.06, z: 0}
+  m_LocalEulerAnglesHint: {x: 24.02, y: -10.16, z: 0}

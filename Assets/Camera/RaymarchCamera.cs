@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 using System.IO;
+using Unity.VisualScripting;
 
 
 [RequireComponent(typeof(Camera))]
@@ -41,6 +42,9 @@ using System.IO;
      private static int _mengerSpongesQuantity = 5;
      [Header("Geometry")] 
      [SerializeField] private List<MengerSponge> mengerSponges = new List<MengerSponge>(_mengerSpongesQuantity);
+
+     [SerializeField] private bool animateMengerSponges; 
+     [SerializeField] private float mengerSpongesAnimateSpeed; 
      
      private List<Vector4> GetMengerSpongesVectors()
      {
@@ -77,6 +81,66 @@ using System.IO;
 
          return getMengerSpongesRepetitions;
      }
+     
+     //-----------
+     
+     // Geometry -------------------------
+     
+     private static int _mandelbulbQuantity = 5;
+     [SerializeField] private List<Mandelbulb> mandelbulbs = new List<Mandelbulb>(_mandelbulbQuantity);
+
+     [SerializeField] private bool animateMandelbulb;
+     [SerializeField] private float animateSpeed;
+     private List<Vector4> GetMandelbulbVectors()
+     {
+         List<Vector4> mandelbulbsVector = new List<Vector4>();
+         
+         foreach (var mandelbulb in mandelbulbs)
+         {
+             mandelbulbsVector.Add(mandelbulb.Coords);
+         }
+
+         return mandelbulbsVector;
+     }
+     
+     private List<float> GetMandelbulbScales()
+     {
+         List<float> getMandelbulbScales = new List<float>();
+         
+         foreach (var mandelbulb in mandelbulbs)
+         {
+             getMandelbulbScales.Add(mandelbulb.Scale);
+         }
+
+         return getMandelbulbScales;
+     }
+     
+     private List<float> GetMandelbulbRepetitions()
+     {
+         List<float> getMandelbulbRepetitions = new List<float>();
+         
+         foreach (var mandelbulb in mandelbulbs)
+         {
+             getMandelbulbRepetitions.Add(mandelbulb.Repetitions);
+         }
+
+         return getMandelbulbRepetitions;
+     }
+
+     private List<float> GetMandelbulbIterations()
+     {
+         List<float> getMandelbulbIterations = new List<float>();
+         
+         foreach (var mandelbulb in mandelbulbs)
+         {
+             getMandelbulbIterations.Add(mandelbulb.Iterations);
+         }
+
+         return getMandelbulbIterations;
+     }
+     
+     //-----------
+
      
      // repeat
      [SerializeField] private float modRepeatX;
@@ -162,6 +226,16 @@ using System.IO;
             RaymarchMaterial.SetFloatArray("_MengerSpongesScales", GetMengerSpongesScales());
             RaymarchMaterial.SetVectorArray("_MengerSpongesVectors", GetMengerSpongesVectors());
             RaymarchMaterial.SetFloatArray("_MengerSpongesRep", GetMengerSpongesRepetitions());
+            
+        }
+        
+        if (mandelbulbs.Count > 0 && mandelbulbs.Count <= 5)
+        {
+            RaymarchMaterial.SetInteger("_MandelbulbsLimit", mandelbulbs.Count);
+            RaymarchMaterial.SetFloatArray("_MandelbulbsScales", GetMandelbulbScales());
+            RaymarchMaterial.SetVectorArray("_MandelbulbsVectors", GetMandelbulbVectors());
+            RaymarchMaterial.SetFloatArray("_MandelbulbsRep", GetMandelbulbRepetitions());
+            RaymarchMaterial.SetFloatArray("_MandelbulbsIterations", GetMandelbulbIterations());
             
         }
 
@@ -286,6 +360,35 @@ using System.IO;
     // Update is called once per frame
     void Update()
     {
-        
+        if(animateMandelbulb)
+        {
+            foreach (var mandelbulb in mandelbulbs)
+            {
+                if (mandelbulb.Iterations < 1)
+                {
+                    mandelbulb.Iterations = 1;
+                    
+                }
+                mandelbulb.Iterations = (mandelbulb.Iterations + animateSpeed) % 16;
+            }
+        }
+
+        if (animateMengerSponges)
+        {
+            foreach (var mengerSponge in mengerSponges)
+            {
+                
+                if (mengerSponge.Scale > 5 || mengerSponge.Scale < -5)
+                {
+                    mengerSponge.Scale = -5;
+                }
+
+                if (mengerSponge.Scale > -3.6 && mengerSponge.Scale < -2.7)
+                {
+                    mengerSponge.Scale = -2.6f;
+                }
+                mengerSponge.Scale = mengerSponge.Scale + mengerSpongesAnimateSpeed % 10;
+            }
+        }
     }
 }
