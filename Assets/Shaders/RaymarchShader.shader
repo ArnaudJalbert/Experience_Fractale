@@ -27,7 +27,8 @@ Shader "PeerPlay/RaymarchShader"
             
             #include "UnityCG.cginc"
             #include "Primitives.cginc"
-            #include "MengerSpone.cginc"
+            #include "MengerSponge.cginc"
+            #include "Mandelbulb.cginc"
 
             #define MAX_RAYMARCH_ITERATIONS 256
             #define DISTANCE_EPSILON 0.01f
@@ -141,13 +142,15 @@ Shader "PeerPlay/RaymarchShader"
 
                 for(int i = 0; i < _MengerSpongesLimit; i++)
                 {
-                    float2 current = map(p - _MengerSpongesVectors[i].xyz,
+                    float2 current = mengerSpongeMap(p - _MengerSpongesVectors[i].xyz,
                                     _MengerSpongesScales[i],
                                     _MengerSpongesVectors[i].w,
                                     _MengerSpongesRep[i]);
                     
                     closestPoint = min(closestPoint, current);
                 }
+
+                closestPoint = mandelbulbMap(p - _MengerSpongesVectors[0], 6);
                 
                 return closestPoint.x;
             }

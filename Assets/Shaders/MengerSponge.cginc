@@ -1,7 +1,7 @@
-// basic menger spone functions
+// basic menger sponge functions
 
-#ifndef MENGER_SPONE
-#define MENGER_SPONE
+#ifndef MENGER_SPONGE
+#define MENGER_SPONGE
 
 #include "Primitives.cginc"
 
@@ -54,7 +54,7 @@ float pMod ( float p, float size)
     return p;
 }
 
-float2 map(float3 p, float scale, float size, int rep)
+float2 mengerSpongeMap(float3 p, float scale, float size, int rep)
 {
     
     float2 d = float2(octahedron(p, float3(size, size, size)), 0);

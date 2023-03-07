@@ -223,15 +223,15 @@ MonoBehaviour:
   shader: {fileID: 4800000, guid: f4c8fdca34aef454281dbc83e7836ba6, type: 3}
   maxIterations: 300
   accuracy: 0.000001
-  maxDistance: 1000
+  maxDistance: 1000.11
   mengerSponges:
-  - _coords: {x: 0, y: 0, z: 0, w: 1.69}
-    _scale: 3.03
-    _repetitions: 10
+  - _coords: {x: 0, y: 0, z: 0, w: 2.51}
+    _scale: 2.01
+    _repetitions: 7
   modRepeatX: 3.44
   modRepeatY: 5.7
   modRepeatZ: 23.78
-  switchRepeatX: 1
+  switchRepeatX: 0
   switchRepeatY: 0
   switchRepeatZ: 0
   mainColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}

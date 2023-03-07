@@ -13,9 +13,9 @@ using System.IO;
      [Header("Shader File")] [SerializeField]
      private Shader shader;
      
-     [Range(1,300)] [SerializeField] private int maxIterations = 300;
+     [Range(1,1000)] [SerializeField] private int maxIterations = 300;
 
-     [Range(0.1f, 0.000001f)] [SerializeField] private float accuracy = 0.0001f;
+     [Range(0.1f, 0.000000001f)] [SerializeField] private float accuracy = 0.0001f;
      
      // Camera ------------
      private Camera _cam;
