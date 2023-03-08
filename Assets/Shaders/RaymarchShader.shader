@@ -54,6 +54,15 @@ Shader "PeerPlay/RaymarchShader"
             float _MengerSpongesScales[MENGER_SPONGES_LIMIT];
             int _MengerSpongesRep[MENGER_SPONGES_LIMIT];
 
+            #define MANDELBULB_LIMIT 5
+
+            int _MandelbulbsLimit;
+            
+            float4 _MandelbulbsVectors[MANDELBULB_LIMIT];
+            float _MandelbulbsScales[MANDELBULB_LIMIT];
+            int _MandelbulbsRep[MANDELBULB_LIMIT];
+            float _MandelbulbsIterations[MANDELBULB_LIMIT];
+
             // to repeat the shapes
             uniform float _ModRepeatX;
             uniform float _ModRepeatY;
@@ -135,11 +144,12 @@ Shader "PeerPlay/RaymarchShader"
                 }
                 if(_SwitchRepeatZ)
                 {
-                    float modY = modAxis(p.z, _ModRepeatZ);
+                    float modZ = modAxis(p.z, _ModRepeatZ);
                 }
 
                 float2 closestPoint = 999999;
 
+                // checking for menger sponges
                 for(int i = 0; i < _MengerSpongesLimit; i++)
                 {
                     float2 current = mengerSpongeMap(p - _MengerSpongesVectors[i].xyz,
@@ -150,7 +160,15 @@ Shader "PeerPlay/RaymarchShader"
                     closestPoint = min(closestPoint, current);
                 }
 
-                closestPoint = mandelbulbMap(p - _MengerSpongesVectors[0], 6);
+                // checking for mandelbulbs
+                for(int i = 0; i < _MandelbulbsLimit; i++)
+                {
+                    float2 current = mandelbulbMap(p - _MandelbulbsVectors[i].xyz, _MandelbulbsRep[i], _MandelbulbsIterations[i]);
+                    
+                    
+                    closestPoint = min(closestPoint, current);
+                }
+                
                 
                 return closestPoint;
             }

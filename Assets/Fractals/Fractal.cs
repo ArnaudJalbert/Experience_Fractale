@@ -1,7 +1,9 @@
+using System;
 using UnityEngine;
 
 namespace Fractals
 {
+    [Serializable]
     public class Fractal
     {
         [SerializeField] private Vector4 _coords;
