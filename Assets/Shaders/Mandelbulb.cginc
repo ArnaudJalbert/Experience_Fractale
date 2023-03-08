@@ -30,7 +30,7 @@ float2 mandelbulbMap( float3 p, int rep, float n)
             break;
     }
     
-    return 0.05*log(m)*sqrt(m)/dz;
+    return 0.1*log(m)*sqrt(m)/dz;
     
 }
 
