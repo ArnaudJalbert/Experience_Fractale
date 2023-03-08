@@ -336,10 +336,10 @@ MonoBehaviour:
   accuracy: 0.001
   maxDistance: 300
   mengerSponges:
-  - _coords: {x: 0, y: 0, z: 0.15, w: 3.64}
-    _scale: -2.71
+  - _coords: {x: 0, y: 0, z: 0.15, w: 3.73}
+    _scale: 1.7099966
     _repetitions: 3
-  animateMengerSponges: 0
+  animateMengerSponges: 1
   mengerSpongesAnimateSpeed: 0.01
   mandelbulbs: []
   animateMandelbulb: 0
@@ -350,13 +350,13 @@ MonoBehaviour:
   switchRepeatX: 1
   switchRepeatY: 1
   switchRepeatZ: 1
-  mainColor: {r: 0.36320752, g: 1, b: 0.60219145, a: 1}
+  mainColor: {r: 0.6981132, g: 0.65217614, b: 0.5433428, a: 1}
   directionalLight: {fileID: 579433}
-  lightColor: {r: 1, g: 1, b: 1, a: 1}
+  lightColor: {r: 0.8867924, g: 0.28025985, b: 0.28025985, a: 1}
   lightIntensity: 1
-  shadowDistance: {x: 4, y: 20}
-  shadowIntensity: 1
+  shadowDistance: {x: 1.46, y: 23.88}
+  shadowIntensity: 1.9
   shadowPenumbra: 5.45
-  aoStepSize: 1
-  aoIterations: 2
-  aoIntensity: 0.5
+  aoStepSize: 1.49
+  aoIterations: 3
+  aoIntensity: 0.381
