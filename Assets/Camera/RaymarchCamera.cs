@@ -192,7 +192,7 @@ using Unity.VisualScripting;
 
     [Range(0.1f, 10f)][SerializeField] private float aoStepSize = 1.0f;
     
-    [Range(1,5)][SerializeField] private int aoIterations = 2;
+    [Range(0,5)][SerializeField] private int aoIterations = 2;
     
     [Range(0f, 1f)][SerializeField] private float aoIntensity = 0.5f;
     //------------------
@@ -344,13 +344,7 @@ using Unity.VisualScripting;
         Directory.Delete( shaderCachePath , true );
     }
 
-    public override void OnValidate()
-    {
-        base.OnValidate();
 
-    }
-    
-    
     // Start is called before the first frame update
     void Start()
     {

@@ -332,12 +332,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   shader: {fileID: 4800000, guid: f4c8fdca34aef454281dbc83e7836ba6, type: 3}
-  maxIterations: 500
+  maxIterations: 100
   accuracy: 0.001
-  maxDistance: 300
+  maxDistance: 200
   mengerSponges:
   - _coords: {x: 0, y: 0, z: 0.15, w: 3.73}
-    _scale: 1.7099966
+    _scale: 1.6399999
     _repetitions: 3
   animateMengerSponges: 1
   mengerSpongesAnimateSpeed: 0.01
@@ -352,11 +352,11 @@ MonoBehaviour:
   switchRepeatZ: 1
   mainColor: {r: 0.6981132, g: 0.65217614, b: 0.5433428, a: 1}
   directionalLight: {fileID: 579433}
-  lightColor: {r: 0.8867924, g: 0.28025985, b: 0.28025985, a: 1}
-  lightIntensity: 1
+  lightColor: {r: 0.7830189, g: 0.6020381, b: 0.6020381, a: 1}
+  lightIntensity: 1.05
   shadowDistance: {x: 1.46, y: 23.88}
-  shadowIntensity: 1.9
+  shadowIntensity: 1.95
   shadowPenumbra: 5.45
-  aoStepSize: 1.49
-  aoIterations: 3
-  aoIntensity: 0.381
+  aoStepSize: 2.84
+  aoIterations: 1
+  aoIntensity: 0.487

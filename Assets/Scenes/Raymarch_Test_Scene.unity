@@ -177,7 +177,7 @@ Camera:
   near clip plane: 0.3
   far clip plane: 1000
   field of view: 52.5
-  orthographic: 1
+  orthographic: 0
   orthographic size: 5
   m_Depth: -1
   m_CullingMask:
@@ -202,7 +202,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 524447366}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -2.611}
+  m_LocalPosition: {x: 0, y: 0, z: -10.01}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -222,35 +222,35 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   shader: {fileID: 4800000, guid: f4c8fdca34aef454281dbc83e7836ba6, type: 3}
-  maxIterations: 500
-  accuracy: 0.0014
-  maxDistance: 1000
+  maxIterations: 250
+  accuracy: 0.001
+  maxDistance: 150
   mengerSponges: []
   animateMengerSponges: 0
   mengerSpongesAnimateSpeed: 0
   mandelbulbs:
   - _coords: {x: 1.14, y: 0, z: -0.06, w: 0}
     _scale: 1.31
-    _repetitions: 48
-    iterations: 4.78
+    _repetitions: 2
+    iterations: 8.58
   animateMandelbulb: 0
   animateSpeed: 0.03
   modRepeatX: 8.5
   modRepeatY: 4.5
   modRepeatZ: 15.7
-  switchRepeatX: 0
-  switchRepeatY: 0
-  switchRepeatZ: 0
+  switchRepeatX: 1
+  switchRepeatY: 1
+  switchRepeatZ: 1
   mainColor: {r: 0.21239765, g: 0.37697762, b: 0.4056604, a: 1}
   directionalLight: {fileID: 1709922401}
-  lightColor: {r: 1, g: 1, b: 1, a: 1}
-  lightIntensity: 1
+  lightColor: {r: 0.5377358, g: 0.51429987, b: 0.1953097, a: 1}
+  lightIntensity: 2.76
   shadowDistance: {x: 2, y: 10}
-  shadowIntensity: 0.99
-  shadowPenumbra: 5
-  aoStepSize: 0.5
-  aoIterations: 2
-  aoIntensity: 0.14
+  shadowIntensity: 2.21
+  shadowPenumbra: 9.2
+  aoStepSize: 0.1
+  aoIterations: 0
+  aoIntensity: 0.238
 --- !u!114 &524447371
 MonoBehaviour:
   m_ObjectHideFlags: 0
