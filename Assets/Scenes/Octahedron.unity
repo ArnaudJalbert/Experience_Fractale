@@ -336,17 +336,17 @@ MonoBehaviour:
   accuracy: 0.001
   maxDistance: 200
   mengerSponges:
-  - _coords: {x: 0, y: 0, z: 0.15, w: 3.73}
-    _scale: 1.6399999
+  - _coords: {x: 0, y: 0, z: 0.15, w: 3.85}
+    _scale: 3.0499985
     _repetitions: 3
   animateMengerSponges: 1
   mengerSpongesAnimateSpeed: 0.01
   mandelbulbs: []
   animateMandelbulb: 0
   animateSpeed: 0
-  modRepeatX: 6.84
-  modRepeatY: 7.26
-  modRepeatZ: 7.37
+  modRepeatX: 7
+  modRepeatY: 7
+  modRepeatZ: 7
   switchRepeatX: 1
   switchRepeatY: 1
   switchRepeatZ: 1

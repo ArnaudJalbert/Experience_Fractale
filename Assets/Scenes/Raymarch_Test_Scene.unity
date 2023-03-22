@@ -161,7 +161,7 @@ Camera:
   m_Enabled: 1
   serializedVersion: 2
   m_ClearFlags: 2
-  m_BackGroundColor: {r: 0.9528302, g: 0.7084134, b: 0.4179868, a: 0}
+  m_BackGroundColor: {r: 0.2264151, g: 0.22495446, b: 0.22321111, a: 0}
   m_projectionMatrixMode: 1
   m_GateFitMode: 2
   m_FOVAxisMode: 0
@@ -222,7 +222,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   shader: {fileID: 4800000, guid: f4c8fdca34aef454281dbc83e7836ba6, type: 3}
-  maxIterations: 250
+  maxIterations: 9366
   accuracy: 0.001
   maxDistance: 150
   mengerSponges: []
@@ -231,13 +231,13 @@ MonoBehaviour:
   mandelbulbs:
   - _coords: {x: 1.14, y: 0, z: -0.06, w: 0}
     _scale: 1.31
-    _repetitions: 2
-    iterations: 8.58
-  animateMandelbulb: 0
+    _repetitions: 18
+    iterations: 8.939997
+  animateMandelbulb: 1
   animateSpeed: 0.03
-  modRepeatX: 8.5
-  modRepeatY: 4.5
-  modRepeatZ: 15.7
+  modRepeatX: 9
+  modRepeatY: 9
+  modRepeatZ: 9
   switchRepeatX: 1
   switchRepeatY: 1
   switchRepeatZ: 1
@@ -248,9 +248,9 @@ MonoBehaviour:
   shadowDistance: {x: 2, y: 10}
   shadowIntensity: 2.21
   shadowPenumbra: 9.2
-  aoStepSize: 0.1
-  aoIterations: 0
-  aoIntensity: 0.238
+  aoStepSize: 2.6
+  aoIterations: 1
+  aoIntensity: 0.193
 --- !u!114 &524447371
 MonoBehaviour:
   m_ObjectHideFlags: 0
